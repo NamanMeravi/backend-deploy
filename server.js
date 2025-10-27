@@ -12,10 +12,14 @@ const app = express();
 // ✅ Proper CORS setup
 app.use(
   cors({
-    origin:"http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://frontend-deploy-neon-xi.vercel.app"
+    ],
     credentials: true,
   })
 );
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
