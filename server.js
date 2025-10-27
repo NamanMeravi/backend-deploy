@@ -2,48 +2,34 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dbConnect from './config/dbConnect.js'
+import dbConnect from "./config/dbConnect.js";
 import authRoutes from "./routes/auth.route.js";
 
-const app = express();
- 
 dotenv.config();
 
-//console.log("MONGODB_URI:", process.env.MONGODB_URI);
-//console.log("JWT_SECRET:", process.env.JWT_SECRET ? "✅ Loaded" : "❌ Not found");
+const app = express();
 
-// CORS configuration
-app.use(cors({
+// ✅ Proper CORS setup
+app.use(
+  cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
-    optionsSuccessStatus: 200
-}));
+  })
+);
 
-// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Routes
+// ✅ Connect to MongoDB once at cold start
+await dbConnect();
+
+// ✅ Routes
 app.use("/api/auth", authRoutes);
 
-// Connect to database
+// ✅ Health check route (optional, good for testing)
+app.get("/", (req, res) => {
+  res.send("✅ Backend deployed successfully!");
+});
 
-let isConnected  = false;
-
-
-dbConnect();
-
- app.use((req,res,next)=>{
-    
-        if(!isConnected){
-            dbConnect();
-        }
-        next();
-     
- })
-
-
-
-
-export default app;
+export default app; // ✅ Export app for Vercel
