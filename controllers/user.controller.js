@@ -26,10 +26,10 @@ export const registerUser = async (req, res) => {
 
         const token = user.generateToken();
 
-        res.cookie("token", token,{
+        res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production" ? true : false,
-            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             maxAge: 1 * 24 * 60 * 60 * 1000,
         });
 
@@ -83,8 +83,8 @@ export const Login = async (req, res) => {
         // Set cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production" ? true : false,
-            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
         });
 
@@ -229,8 +229,8 @@ export const Logout = async(req,res)=>{
         // Clear the cookie by setting it with an empty value and immediate expiry
         res.cookie("token", "", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production" ? true : false,
-            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             maxAge: 0, // Immediately expire the cookie
         });
 
